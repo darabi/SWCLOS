@@ -29,7 +29,7 @@
   ) ; end of eval-when
 
 (cl:defpackage :gx
-  (:shadow parse-uri type typep value typep)
+  (:shadow parse-uri type typep value typep intern-uri)
   (:import-from :net.uri render-uri uri-fragment copy-uri uri-scheme)
   (:use :common-lisp :net.uri)
   (:export iri iri-p iri-value set-uri-namedspace set-uri-namedspace-from-pkg get-uri-namedspace
@@ -127,6 +127,12 @@ of a Prefix associated uri by interning it. See <make-uri-space> in Allegro Comm
 package slot and uri to symbol name mapping environment slot.")
   )
 
+(defun gx::intern-uri (uri &optional uri-space)
+  (when (search "owl" (uri-path uri))
+    (format t "interning owl uri ~A, following are in NS:~%" uri)
+    (do-all-uris (u ) (format t "    ~A~%" u)))
+  (net.uri:intern-uri uri (or uri-space net.uri::*uris*)))
+
 (defun set-uri-namedspace (prefix-uri)
   "after interning <prefix-uri> to <*NameSpaces*>, change the class of <prefix-uri> from <net.uri:uri> 
    to <uri-namedspace>. After that, symbol to uri mapping can be placed in this namespace."
@@ -206,7 +212,7 @@ package slot and uri to symbol name mapping environment slot.")
    Note that QName symbol is automatically exported in this function."
   (declare (optimize (speed 3) (safety 1)))
   (let* ((name (iri-de-escape (uri-fragment uri)))
-         (butnameuri (copy-uri uri :fragment ""))
+         (butnameuri (copy-uri uri :fragment nil))
          (pkg (uri2package butnameuri))
          (namedspace nil)
          (symbol nil))
