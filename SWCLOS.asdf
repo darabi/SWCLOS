@@ -71,10 +71,10 @@
   :in-order-to ((compile-op (load-op "owl"))  
                 (load-op (load-op "owl")))
   :components
-  ((:module "ntriple"
+  ((:module "NTriple"
             :components
-            ((:file "Ntriple")
-             (:file "NTparser")
+            ((:file "ntriple")
+             (:file "ntparser")
              (:file "ntwriter")))))
 
 (in-package #:cl-user)
