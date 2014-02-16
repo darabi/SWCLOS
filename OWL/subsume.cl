@@ -36,7 +36,7 @@
         ((eq c t) (values nil t))
         ((and (consp c) (consp d) ; then a set of elements are interpreted as CONJUNCTION.
               (null (set-difference d c :test #'(lambda (dd cc) (subsumed-p cc dd)))))
-         (error "Check cons for subsumption!")
+         (cerror "Continue and return t" "Check cons whether C is subsumed by D, where C is ~A and D is ~A" c d)
          (values t t))
         ;; the following is for the purpose of fast computation as RDF semantics
         ((and (not (rdf-instance-p c))
